@@ -24,16 +24,24 @@
 <body>
   <div class="container">
     <div class="mainBody">
+      
       <div class="panel-group">
         <div class="panel panel-primary">
-          <div class="panel-heading listOfActions">hyloSphere pre-pre-alpha</div>
+          <div class="panel-heading listOfActivities">Create new activity</div>
           <div class="panel-body">
-            <form action="" id="items-form">
+            <form action="" id="activities-form">
               <div class="form-group">
-                <label>Enter new Action:</label>
-                <textarea id="newItem" type="text" class="form-control"></textarea>
+                <label>Name:</label>
+                <input type="text" class="form-control" placeholder="Do taxes" id="new-act-name">
+                <label>Description:</label>
+                <textarea id="new-act-desc" type="text" class="form-control" placeholder="Itemize expenses, call CPA..." ></textarea>
+                <label>How long does this activity usually take?</label>
+                <div class="input-group">
+                  <input type="text" class="form-control" placeholder="30" aria-describedby="new-act-duration">
+                  <span class="input-group-addon" id="new-act-duration">minutes</span>
+                </div>
               </div>
-              <button class="btn">Add to Action Library</button>
+              <button class="btn">Add to Activity Library</button>
             </form>
           </div>
         </div>
@@ -41,13 +49,15 @@
 
       <div class="panel-group">
         <div class="panel panel-default">
-          <div class="panel-heading listOfActions">Available Actions:</div>
+          <div class="panel-heading listOfActivities">Available Activities:</div>
           <div class="panel-body">
-            <ul class="item-list">
+            <ul class="activity-list">
             </ul>
           </div>
         </div>
       </div>
+
+
     </div>
   </div>
 </body>
