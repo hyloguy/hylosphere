@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+
+  <title>hyloSphere</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="app.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <!-- font awesome -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+  <!-- Bootstrap JS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js">
+  <!-- jQuery -->
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+  <!-- Firebase CDN -->
+  <script src="https://www.gstatic.com/firebasejs/3.4.1/firebase.js"></script>
+  <!-- js -->
+  <script src="app.js"></script>
+</head>
+
+<body>
+  <div class="container">
+    <div class="mainBody">
+      <div class="panel-group">
+        <div class="panel panel-primary">
+          <div class="panel-heading listOfThings">hyloSphere pre-pre-alpha</div>
+          <div class="panel-body">
+            <form action="" id="items-form">
+              <div class="form-group">
+                <label>Enter New Item:</label>
+                <textarea id="newItem" type="text" class="form-control"></textarea>
+              </div>
+              <button class="btn">Add to Inventory</button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-group">
+        <div class="panel panel-default">
+          <div class="panel-heading listOfThings">Something goes here.</div>
+          <div class="panel-body">
+            <ul class="item-list">
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
