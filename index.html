@@ -7,7 +7,7 @@
   <title>hyloSphere</title>
 
   <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="app.css">
+  <link rel="stylesheet" href="css/app.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
   <!-- font awesome -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
@@ -18,13 +18,13 @@
   <!-- Firebase CDN -->
   <script src="https://www.gstatic.com/firebasejs/3.4.1/firebase.js"></script>
   <!-- js -->
-  <script src="app.js"></script>
+  <script src="js/app.js"></script>
 </head>
 
 <body>
   <div class="container">
     <div class="mainBody">
-      
+
       <div class="panel-group">
         <div class="panel panel-primary">
           <div class="panel-heading listOfActivities">Create new activity</div>
@@ -37,8 +37,8 @@
                 <textarea id="new-act-desc" type="text" class="form-control" placeholder="Itemize expenses, call CPA..." ></textarea>
                 <label>How long does this activity usually take?</label>
                 <div class="input-group">
-                  <input type="text" class="form-control" placeholder="30" aria-describedby="new-act-duration">
-                  <span class="input-group-addon" id="new-act-duration">minutes</span>
+                  <input id="new-act-duration" type="text" class="form-control" placeholder="30" aria-labelledby="duration-label">
+                  <span class="input-group-addon" id="duration-label">minutes</span>
                 </div>
               </div>
               <button class="btn">Add to Activity Library</button>
