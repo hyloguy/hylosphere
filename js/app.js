@@ -17,14 +17,12 @@ firebase.initializeApp(config);
 var dbRef = firebase.database();
 
 $(document).ready(function() {
-  // Perform a READ (the R in CRUD) to refresh the list view
   hyloAppObject.setupListeners();
 });
 
 var hyloAppObject = (function() {
 
   // PUBLIC METHOD
-
   function setupListeners() {
 
     // Whenever the Activities collection in Firebase changes, re-load the full list of
@@ -32,32 +30,8 @@ var hyloAppObject = (function() {
     // (This event listener is triggered whenever a value in the activities collection is changed.)
     dbRef.ref('activities').on('value', function(results) {
       var $actList = $('.activity-list');
-      var activities = [];
       var allActivities = results.val();
-
-      $actList.empty();
-      for (var a in allActivities) {
-        var name = allActivities[a].name;
-        var $activityListElement = $('<li>');
-
-        var $deleteElement = $('<i class="fa fa-trash pull-right delete"></i>');
-        $deleteElement.on('click', function(e) {
-          var id = $(e.target.parentNode).data('id');
-          deleteActivity(id);
-        });
-
-        var $editElement = $('<i class="fa fa-pencil-square-o pull-right edit"></i>');
-        $editElement.on('click', function(e) {
-          var id = $(e.target.parentNode).data('id');
-          editActivity(id);
-        });
-
-        $activityListElement.attr('data-id', a);
-        $activityListElement.html(name);
-        $activityListElement.append($deleteElement);
-        $activityListElement.append($editElement);
-        $actList.append($activityListElement);
-      }
+      populateListView($actList, allActivities);
     });
 
     // Handle the submit form event:
@@ -67,13 +41,13 @@ var hyloAppObject = (function() {
       var newActivity = {};
 
       // Grab the new activity from the form, then blank out the fields
-      newActivity.name = $('#new-act-name').val();
-      newActivity.desc = $('#new-act-desc').val();
-      newActivity.duration = $('#new-act-duration').val();
+      newActivity.name = $('#act-name').val();
+      newActivity.desc = $('#act-desc').val();
+      newActivity.duration = $('#act-duration').val();
 
-      $('#new-act-name').val('');
-      $('#new-act-desc').val('');
-      $('#new-act-duration').val('');
+      $('#act-name').val('');
+      $('#act-desc').val('');
+      $('#act-duration').val('');
 
       // Locate the 'activities' collection in the databse, OR create it if it doesn't exist,
       // and get a reference to it.
@@ -93,7 +67,7 @@ var hyloAppObject = (function() {
 
   // PRIVATE METHODS
 
-  function editActivity(id) {
+  function editItem(id) {
     var actRef = dbRef.ref('activities').child(id);
     console.log(`Edit link for hylo-activity ${id} has been clicked on.`);
     // actRef.update({
@@ -101,9 +75,36 @@ var hyloAppObject = (function() {
     // });
   }
 
-  function deleteActivity(id) {
+  function deleteItem(id) {
     var actRef = dbRef.ref('activities').child(id);
     actRef.remove();
+  }
+
+  function populateListView($listView, listData) {
+    $listView.empty();
+
+    for (var item in listData) {
+      var name = listData[item].name;
+      var $li = $('<li>');
+
+      var $deleteElement = $('<i class="fa fa-trash pull-right delete"></i>');
+      $deleteElement.on('click', function(e) {
+        var id = $(e.target.parentNode).data('id');
+        deleteItem(id);
+      });
+
+      var $editElement = $('<i class="fa fa-pencil-square-o pull-right edit"></i>');
+      $editElement.on('click', function(e) {
+        var id = $(e.target.parentNode).data('id');
+        editItem(id);
+      });
+
+      $li.attr('data-id', item);
+      $li.html(name);
+      $li.append($deleteElement);
+      $li.append($editElement);
+      $listView.append($li);
+    }
   }
 
   return {
