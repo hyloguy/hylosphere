@@ -45,12 +45,15 @@ $(document).ready(function() {
   });
 
   // Perform a READ (the R in CRUD) to refresh the list view
-  actListViewObj.getActivities();
+  actListViewObj.getData();
 });
 
 var actListViewObj = (function() {
-  function getActivities() {
-    // This event listener is triggered whenever a value in the activities collection is changed?
+
+  // PUBLIC METHODS
+
+  function getData() {
+    // This event listener is triggered whenever a value in the activities collection is changed.
     dbRef.ref('activities').on('value', function(results) {
       var $actList = $('.activity-list');
       var activities = [];
@@ -60,6 +63,7 @@ var actListViewObj = (function() {
         var name = allActivities[a].name;
         var $activityListElement = $('<li>');
         var $deleteElement = $('<i class="fa fa-trash pull-right delete"></i>');
+        var $editElement = $('<i class="fa fa-pencil-square-o pull-right edit"></i>');
 
         // Handle clicks to DELETE an activity
         $deleteElement.on('click', function(e) {
@@ -67,9 +71,16 @@ var actListViewObj = (function() {
           deleteActivity(id);
         });
 
+        // Handle clicks to edit an activity
+        $editElement.on('click', function(e) {
+          var id = $(e.target.parentNode).data('id');
+          editActivity(id);
+        });
+
         $activityListElement.attr('data-id', a);
         $activityListElement.html(name);
         $activityListElement.append($deleteElement);
+        $activityListElement.append($editElement);
         activities.push($activityListElement);
       }
       $actList.empty();
@@ -79,12 +90,22 @@ var actListViewObj = (function() {
     });
   }
 
+  // PRIVATE METHODS
+
+  function editActivity(id) {
+    var actRef = dbRef.ref('activities').child(id);
+    console.log(`Edit link for item ${id} has been clicked on.`);
+    // actRef.update({
+    //   someKey: someval
+    // });
+  }
+
   function deleteActivity(id) {
     var actRef = dbRef.ref('activities').child(id);
     actRef.remove();
   }
 
   return {
-    getActivities: getActivities
+    getData: getData
   };
 })();

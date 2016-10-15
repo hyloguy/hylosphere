@@ -10,7 +10,8 @@
     "ignore": [
       "firebase.json",
       "database-rules.json",
-      "storage.rules"
+      "storage.rules",
+      "firebase-debug.log"
     ]
   }
 }
