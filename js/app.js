@@ -31,23 +31,26 @@ var hyloAppObject = (function() {
     dbRef.ref('activities').on('value', function(results) {
       var $actList = $('.activity-list');
       var allActivities = results.val();
+      console.log(allActivities); // testing
       populateListView($actList, allActivities);
     });
 
+
     // Handle ANY submit-form event:
     $('form').submit(function(e) {
-      e.preventDefault();
-
-      var newItem = {};
+      // Get a pointer to the form that was just submitted.
       var $frm = $(e.target);
+      // Locate the form's associated object in the databse, OR create it if it doesn't exist,
+      // and get a reference to it.
+      var dbobjRef = dbRef.ref($frm.data('dbobj'));
+      var tempObj = {};
+      
       $frm.find('.form-control').each(function(index) {
-        newItem[$(this).data('field')] = $(this).val();
+        tempObj[$(this).data('field')] = $(this).val();
         $(this).val('');
       });
-
-      // Locate the form's associated object in the databse, OR create it if it doesn't exist,
-      // get a reference to it, and append the new data to it.
-      dbRef.ref($frm.data('dbobj')).push(newItem);
+      dbobjRef.push(tempObj);
+      e.preventDefault();
     });
 
   }
