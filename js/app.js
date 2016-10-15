@@ -35,19 +35,19 @@ var hyloAppObject = (function() {
     });
 
     // Handle the submit form event:
-    $('#activities-form').submit(function(event) {
-      event.preventDefault();
+    $('#activities-form').submit(function(e) {
+      e.preventDefault();
 
-      var newActivity = {};
+      var newItem = {};
 
       // Grab the new activity from the form, then blank out the fields
-      newActivity.name = $('#act-name').val();
-      newActivity.desc = $('#act-desc').val();
-      newActivity.duration = $('#act-duration').val();
+      newItem.name = $('form .' + 'name').val();
+      newItem.desc = $('form .' + 'desc').val();
+      newItem.duration = $('form .' + 'duration').val();
 
-      $('#act-name').val('');
-      $('#act-desc').val('');
-      $('#act-duration').val('');
+      $('form .' + 'name').val('');
+      $('form .' + 'desc').val('');
+      $('form .' + 'duration').val('');
 
       // Locate the 'activities' collection in the databse, OR create it if it doesn't exist,
       // and get a reference to it.
@@ -55,9 +55,9 @@ var hyloAppObject = (function() {
 
       // Add the new activity to the 'activities' collection with a quantity of 1.
       actColRef.push({
-        name: newActivity.name,
-        description: newActivity.desc,
-        duration: newActivity.duration
+        name: newItem.name,
+        description: newItem.desc,
+        duration: newItem.duration
       });
       console.log("New hylo-activity added.")
     });
@@ -89,13 +89,13 @@ var hyloAppObject = (function() {
 
       var $deleteElement = $('<i class="fa fa-trash pull-right delete"></i>');
       $deleteElement.on('click', function(e) {
-        var id = $(e.target.parentNode).data('id');
+        var id = $(e.target).parent().data('id');
         deleteItem(id);
       });
 
       var $editElement = $('<i class="fa fa-pencil-square-o pull-right edit"></i>');
       $editElement.on('click', function(e) {
-        var id = $(e.target.parentNode).data('id');
+        var id = $(e.target).parent().data('id');
         editItem(id);
       });
 
