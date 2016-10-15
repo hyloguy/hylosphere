@@ -17,42 +17,16 @@ firebase.initializeApp(config);
 var dbRef = firebase.database();
 
 $(document).ready(function() {
-  // Handle the submit form event:
-  $('#activities-form').submit(function(event) {
-    event.preventDefault();
-
-    var newActivity = {};
-
-    // Grab the new activity from the form, then blank out the fields
-    newActivity.name = $('#new-act-name').val();
-    newActivity.desc = $('#new-act-desc').val();
-    newActivity.duration = $('#new-act-duration').val();
-
-    $('#new-act-name').val('');
-    $('#new-act-desc').val('');
-    $('#new-act-duration').val('');
-
-    // Locate the 'activities' collection in the databse, OR create it if it doesn't exist,
-    // and get a reference to it.
-    var actColRef = dbRef.ref('activities');
-
-    // Add the new activity to the 'activities' collection with a quantity of 1.
-    actColRef.push({
-      name: newActivity.name,
-      description: newActivity.desc,
-      duration: newActivity.duration
-    });
-  });
-
   // Perform a READ (the R in CRUD) to refresh the list view
-  actListViewObj.getData();
+  hyloAppObject.setupListeners();
 });
 
-var actListViewObj = (function() {
+var hyloAppObject = (function() {
 
-  // PUBLIC METHODS
+  // PUBLIC METHOD
 
-  function getData() {
+  function setupListeners() {
+
     // This event listener is triggered whenever a value in the activities collection is changed.
     dbRef.ref('activities').on('value', function(results) {
       var $actList = $('.activity-list');
@@ -88,13 +62,43 @@ var actListViewObj = (function() {
         $actList.append(activities[i]);
       }
     });
+
+    // Handle the submit form event:
+    $('#activities-form').submit(function(event) {
+      event.preventDefault();
+
+      var newActivity = {};
+
+      // Grab the new activity from the form, then blank out the fields
+      newActivity.name = $('#new-act-name').val();
+      newActivity.desc = $('#new-act-desc').val();
+      newActivity.duration = $('#new-act-duration').val();
+
+      $('#new-act-name').val('');
+      $('#new-act-desc').val('');
+      $('#new-act-duration').val('');
+
+      // Locate the 'activities' collection in the databse, OR create it if it doesn't exist,
+      // and get a reference to it.
+      var actColRef = dbRef.ref('activities');
+
+      // Add the new activity to the 'activities' collection with a quantity of 1.
+      actColRef.push({
+        name: newActivity.name,
+        description: newActivity.desc,
+        duration: newActivity.duration
+      });
+      console.log("New hylo-activity added.")
+    });
+
   }
+
 
   // PRIVATE METHODS
 
   function editActivity(id) {
     var actRef = dbRef.ref('activities').child(id);
-    console.log(`Edit link for item ${id} has been clicked on.`);
+    console.log(`Edit link for hylo-activity ${id} has been clicked on.`);
     // actRef.update({
     //   someKey: someval
     // });
@@ -106,6 +110,7 @@ var actListViewObj = (function() {
   }
 
   return {
-    getData: getData
+    setupListeners: setupListeners
   };
+
 })();
