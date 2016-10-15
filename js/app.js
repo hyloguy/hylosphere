@@ -27,25 +27,26 @@ var hyloAppObject = (function() {
 
   function setupListeners() {
 
-    // This event listener is triggered whenever a value in the activities collection is changed.
+    // Whenever the Activities collection in Firebase changes, re-load the full list of
+    // activities into the view, and attach click event listeners for each list item.
+    // (This event listener is triggered whenever a value in the activities collection is changed.)
     dbRef.ref('activities').on('value', function(results) {
       var $actList = $('.activity-list');
       var activities = [];
       var allActivities = results.val();
 
+      $actList.empty();
       for (var a in allActivities) {
         var name = allActivities[a].name;
         var $activityListElement = $('<li>');
-        var $deleteElement = $('<i class="fa fa-trash pull-right delete"></i>');
-        var $editElement = $('<i class="fa fa-pencil-square-o pull-right edit"></i>');
 
-        // Handle clicks to DELETE an activity
+        var $deleteElement = $('<i class="fa fa-trash pull-right delete"></i>');
         $deleteElement.on('click', function(e) {
           var id = $(e.target.parentNode).data('id');
           deleteActivity(id);
         });
 
-        // Handle clicks to edit an activity
+        var $editElement = $('<i class="fa fa-pencil-square-o pull-right edit"></i>');
         $editElement.on('click', function(e) {
           var id = $(e.target.parentNode).data('id');
           editActivity(id);
@@ -55,11 +56,7 @@ var hyloAppObject = (function() {
         $activityListElement.html(name);
         $activityListElement.append($deleteElement);
         $activityListElement.append($editElement);
-        activities.push($activityListElement);
-      }
-      $actList.empty();
-      for (var i in activities) {
-        $actList.append(activities[i]);
+        $actList.append($activityListElement);
       }
     });
 
