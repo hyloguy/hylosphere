@@ -27,17 +27,17 @@
 
       <div class="panel-group">
         <div class="panel panel-primary">
-          <div class="panel-heading listOfActivities">Create new activity</div>
+          <div class="panel-heading">Create new activity</div>
           <div class="panel-body">
-            <form action="" id="activities-form">
+            <form action="" id="activities-form" data-dbobj="activities">
               <div class="form-group">
                 <label>Name:</label>
-                <input type="text" class="form-control name" placeholder="Do taxes" id="act-name">
+                <input type="text" class="form-control" placeholder="Do taxes" data-field="name">
                 <label>Description:</label>
-                <textarea id="act-desc" type="text" class="form-control desc" placeholder="Itemize expenses, call CPA..." ></textarea>
+                <textarea type="text" class="form-control" placeholder="Itemize expenses, call CPA..." data-field="description"></textarea>
                 <label>How long does this activity usually take?</label>
                 <div class="input-group">
-                  <input id="act-duration" type="text" class="form-control duration" placeholder="30" aria-labelledby="duration-label">
+                  <input type="text" class="form-control" placeholder="30" aria-labelledby="duration-label" data-field="duration">
                   <span class="input-group-addon" id="duration-label">minutes</span>
                 </div>
               </div>
@@ -49,7 +49,7 @@
 
       <div class="panel-group">
         <div class="panel panel-default">
-          <div class="panel-heading listOfActivities">Available Activities:</div>
+          <div class="panel-heading">Available Activities:</div>
           <div class="panel-body">
             <ul class="activity-list">
             </ul>

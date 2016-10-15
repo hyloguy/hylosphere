@@ -34,29 +34,20 @@ var hyloAppObject = (function() {
       populateListView($actList, allActivities);
     });
 
-    // Handle the submit form event:
-    $('#activities-form').submit(function(e) {
+    // Handle ANY submit-form event:
+    $('form').submit(function(e) {
       e.preventDefault();
 
       var newItem = {};
       var $frm = $(e.target);
-
-      newItem.name = $frm.find('.name').val();
-      newItem.desc = $frm.find('.desc').val();
-      newItem.duration = $frm.find('.duration').val();
-      $('.form-control').val('');
-
-      // Locate the 'activities' collection in the databse, OR create it if it doesn't exist,
-      // and get a reference to it.
-      var actColRef = dbRef.ref('activities');
-
-      // Add the new activity to the 'activities' collection with a quantity of 1.
-      actColRef.push({
-        name: newItem.name,
-        description: newItem.desc,
-        duration: newItem.duration
+      $frm.find('.form-control').each(function(index) {
+        newItem[$(this).data('field')] = $(this).val();
+        $(this).val('');
       });
-      console.log("New hylo-activity added.")
+
+      // Locate the form's associated object in the databse, OR create it if it doesn't exist,
+      // get a reference to it, and append the new data to it.
+      dbRef.ref($frm.data('dbobj')).push(newItem);
     });
 
   }
