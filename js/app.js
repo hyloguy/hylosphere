@@ -39,15 +39,12 @@ var hyloAppObject = (function() {
       e.preventDefault();
 
       var newItem = {};
+      var $frm = $(e.target);
 
-      // Grab the new activity from the form, then blank out the fields
-      newItem.name = $('form .' + 'name').val();
-      newItem.desc = $('form .' + 'desc').val();
-      newItem.duration = $('form .' + 'duration').val();
-
-      $('form .' + 'name').val('');
-      $('form .' + 'desc').val('');
-      $('form .' + 'duration').val('');
+      newItem.name = $frm.find('.name').val();
+      newItem.desc = $frm.find('.desc').val();
+      newItem.duration = $frm.find('.duration').val();
+      $('.form-control').val('');
 
       // Locate the 'activities' collection in the databse, OR create it if it doesn't exist,
       // and get a reference to it.
