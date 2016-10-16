@@ -42,7 +42,7 @@ var hyloAppObject = (function() {
       var $frm = $(e.target);
       // Locate the form's associated object in the databse, OR create it if it doesn't exist,
       // and get a reference to it.
-      var dbobjRef = dbRef.ref($frm.data('dbobj'));
+      var dbobjRef = dbRef.ref($frm.data('dbobj-name'));
       var tempObj = {};
 
       // TODO: put UPDATE code in here...
@@ -63,19 +63,19 @@ var hyloAppObject = (function() {
 
   // PRIVATE METHODS
 
-  function editItem(dbobj, id) {
-    var dbobjItemRef = dbRef.ref(dbobj).child(id);
-    console.log(`Edit link for ${dbobj} ${id} has been clicked on.`);
+  function editItem(dbobjName, id) {
+    var dbobjItemRef = dbRef.ref(dbobjName).child(id);
+    console.log(`Edit link for ${dbobjName} ${id} has been clicked on.`);
     // Load the data into the form
   }
 
-  function deleteItem(dbobj, id) {
-    var dbobjItemRef = dbRef.ref(dbobj).child(id);
+  function deleteItem(dbobjName, id) {
+    var dbobjItemRef = dbRef.ref(dbobjName).child(id);
     dbobjItemRef.remove();
   }
 
   function populateListView($listView, listData) {
-    var dbobj = $listView.data('dbobj');
+    var dbobjName = $listView.data('dbobj-name');
     $listView.empty();
 
     for (var itemID in listData) {
@@ -86,13 +86,13 @@ var hyloAppObject = (function() {
       var $deleteElement = $('<i class="fa fa-trash pull-right delete"></i>');
       $deleteElement.on('click', function(e) {
         var id = $(e.target).parent().data('id');
-        deleteItem(dbobj, id);
+        deleteItem(dbobjName, id);
       });
 
       var $editElement = $('<i class="fa fa-pencil-square-o pull-right edit"></i>');
       $editElement.on('click', function(e) {
         var id = $(e.target).parent().data('id');
-        editItem(dbobj, id);
+        editItem(dbobjName, id);
       });
 
       $li.data('id', itemID);
