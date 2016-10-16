@@ -58,17 +58,29 @@ var hyloAppObject = (function() {
         console.log("Saving Item...");
         dbobjRef.push(tempObj);
         // Clear the form
-        $frm.find('.form-control').val('');
-        $frm.data('current-item-id', '');
+        clearForm($frm);
       }
 
       e.preventDefault();
+    });
+
+
+    $('.btn-cancel-form').on('click', function(e) {
+      var $frm = $(e.target.parentNode);
+      console.log($frm);
+      clearForm($frm);
     });
 
   }
 
 
   // PRIVATE METHODS
+
+  function clearForm($frm) {
+    $frm.find('.form-control').val('');
+    $frm.data('current-item-id', '');
+    $frm.find('.btn-primary').html('Save Item');
+  }
 
   function populateListView($listView, listData) {
     var dbobjName = $listView.data('dbobj-name');
@@ -108,7 +120,7 @@ var hyloAppObject = (function() {
     var frm = `form[data-dbobj-name='${dbobjName}']`
     // Load the data into the form
     $(frm).data('current-item-id', id);
-    $(`${frm} .btn`).html('Update Item');
+    $(`${frm} .btn-primary`).html('Update Item');
     console.log(`loaded item ${$(frm).data('current-item-id')} into form`)
     for (var prop in selectedObj) {
       $(`${frm} .form-control[data-field='${prop}']`).val(selectedObj[prop]);
