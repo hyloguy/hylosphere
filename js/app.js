@@ -50,14 +50,11 @@ var hyloAppObject = (function() {
       // Update existing item or save new one
       var currItemID = $frm.data('current-item-id');
       if (currItemID != '') {
-        console.log("Attempting to update...");
         let dbItemRef = dbobjRef.child(currItemID);
         dbItemRef.update(tempObj);
-        console.log(`Updated item ${currItemID}`);
       } else {
-        console.log("Saving Item...");
         dbobjRef.push(tempObj);
-        // Clear the form
+        // Clear the form and close it
         clearForm($frm);
       }
 
@@ -67,8 +64,13 @@ var hyloAppObject = (function() {
 
     $('.btn-cancel-form').on('click', function(e) {
       var $frm = $(e.target.parentNode);
-      console.log($frm);
       clearForm($frm);
+    });
+
+    $('.btn-show-form').on('click', function(e) {
+      var $btn = $(e.target);
+      var dbobjName = $btn.data('dbobj-name');
+      showForm(dbobjName);
     });
 
   }
@@ -76,10 +78,17 @@ var hyloAppObject = (function() {
 
   // PRIVATE METHODS
 
+  function showForm(dbobjName) {
+    $(`#${dbobjName}-form`).removeClass('hidden');
+    $('#item-form').removeClass('hidden');
+  }
+
   function clearForm($frm) {
     $frm.find('.form-control').val('');
     $frm.data('current-item-id', '');
     $frm.find('.btn-primary').html('Save Item');
+    $('#item-form').addClass('hidden');
+    $frm.addClass('hidden');
   }
 
   function populateListView($listView, listData) {
@@ -121,10 +130,11 @@ var hyloAppObject = (function() {
     // Load the data into the form
     $(frm).data('current-item-id', id);
     $(`${frm} .btn-primary`).html('Update Item');
-    console.log(`loaded item ${$(frm).data('current-item-id')} into form`)
+    // console.log(`loaded item ${$(frm).data('current-item-id')} into form`);
     for (var prop in selectedObj) {
       $(`${frm} .form-control[data-field='${prop}']`).val(selectedObj[prop]);
     }
+    showForm(dbobjName);
   }
 
   return {

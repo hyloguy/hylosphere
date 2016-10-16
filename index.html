@@ -25,11 +25,11 @@
   <div class="container">
     <div class="mainBody">
 
-      <div class="panel-group">
+      <div class="panel-group hidden" id="item-form">
         <div class="panel panel-primary">
-          <div class="panel-heading">Activity</div>
+          <div class="panel-heading" id="form-heading">Item Form</div>
           <div class="panel-body">
-            <form action="" id="activities-form" data-dbobj-name="activities" data-current-item-id="">
+            <form class="hidden" action="" id="activities-form" data-dbobj-name="activities" data-current-item-id="">
               <div class="form-group">
                 <label>Name:</label>
                 <input type="text" class="form-control" placeholder="Do taxes" data-field="name">
@@ -55,6 +55,7 @@
             <ul class="activity-list" data-dbobj-name="activities">
             </ul>
           </div>
+          <button type="button" class="btn btn-primary btn-show-form" data-dbobj-name="activities">Create New Activity</button>
         </div>
       </div>
 
