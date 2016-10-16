@@ -45,21 +45,23 @@ var hyloAppObject = (function() {
 
       $frm.find('.form-control').each(function(index) {
         tempObj[$(this).data('field')] = $(this).val();
-        $(this).val('');
       });
 
-      if ($frm.data('current-item-id') != '') {
+      // Update existing item or save new one
+      var currItemID = $frm.data('current-item-id');
+      if (currItemID != '') {
         console.log("Attempting to update...");
-        // TODO: put UPDATE code in here...
-        // dbobjRef.update({
-        //   someKey: someval
-        // });
+        let dbItemRef = dbobjRef.child(currItemID);
+        dbItemRef.update(tempObj);
+        console.log(`Updated item ${currItemID}`);
       } else {
         console.log("Saving Item...");
         dbobjRef.push(tempObj);
+        // Clear the form
+        $frm.find('.form-control').val('');
+        $frm.data('current-item-id', '');
       }
 
-      $frm.data('current-item-id', '');
       e.preventDefault();
     });
 
