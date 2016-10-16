@@ -63,18 +63,20 @@ var hyloAppObject = (function() {
 
   // PRIVATE METHODS
 
-  function editItem(dbobjName, selectedObj, id) {
-    var $frm = $('form')
-    // console.log(`Edit link for ${dbobjName} ${id} has been clicked on.`);
-    // console.log(selectedObj);
+  function editItem(e) {
+    var id = $(e.target).parent().data('id');
+    var selectedObj = $(e.target).parent().parent().data('snapshot')[id];
+    var dbobjName = $(e.target).parent().parent().data('dbobj-name');
+    var frm = `form[data-dbobj-name='${dbobjName}']`
     // Load the data into the form
     for (var prop in selectedObj) {
-      // console.log(prop);
-      $(`form .form-control[data-field='${prop}']`).val(selectedObj[prop]);
+      $(`${frm} .form-control[data-field='${prop}']`).val(selectedObj[prop]);
     }
   }
 
-  function deleteItem(dbobjName, id) {
+  function deleteItem(e) {
+    var id = $(e.target).parent().data('id');
+    var dbobjName = $(e.target).parent().parent().data('dbobj-name');
     var dbobjItemRef = dbRef.ref(dbobjName).child(id);
     dbobjItemRef.remove();
   }
@@ -90,17 +92,10 @@ var hyloAppObject = (function() {
       var $li = $('<li>');
 
       var $deleteElement = $('<i class="fa fa-trash pull-right delete"></i>');
-      $deleteElement.on('click', function(e) {
-        var id = $(e.target).parent().data('id');
-        deleteItem(dbobjName, id);
-      });
+      $deleteElement.on('click', deleteItem);
 
       var $editElement = $('<i class="fa fa-pencil-square-o pull-right edit"></i>');
-      $editElement.on('click', function(e) {
-        var id = $(e.target).parent().data('id');
-        var selectedObj = $(e.target).parent().parent().data('snapshot')[id]
-        editItem(dbobjName, selectedObj, id);
-      });
+      $editElement.on('click', editItem);
 
       $li.data('id', itemID);
       $li.html(name);
