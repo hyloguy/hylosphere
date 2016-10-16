@@ -14,12 +14,11 @@ var config = {
 };
 firebase.initializeApp(config);
 
+// Create an asynchronous reference to the Firebase Real-Time Database.
 var dbRef = firebase.database();
 
-$(document).ready(function() {
-  hyloAppObject.setupListeners();
-});
-
+// Create application object.
+// All the code is inside an Immediately Implemented Function Expression.
 var hyloAppObject = (function() {
 
   // PUBLIC METHOD
@@ -31,7 +30,6 @@ var hyloAppObject = (function() {
     dbRef.ref('activities').on('value', function(results) {
       var $actList = $('.activity-list');
       var allActivities = results.val();
-      // console.log(allActivities); // testing
       populateListView($actList, allActivities);
     });
 
@@ -63,14 +61,27 @@ var hyloAppObject = (function() {
 
   // PRIVATE METHODS
 
-  function editItem(e) {
-    var id = $(e.target).parent().data('id');
-    var selectedObj = $(e.target).parent().parent().data('snapshot')[id];
-    var dbobjName = $(e.target).parent().parent().data('dbobj-name');
-    var frm = `form[data-dbobj-name='${dbobjName}']`
-    // Load the data into the form
-    for (var prop in selectedObj) {
-      $(`${frm} .form-control[data-field='${prop}']`).val(selectedObj[prop]);
+  function populateListView($listView, listData) {
+    var dbobjName = $listView.data('dbobj-name');
+    $listView.empty();
+    $listView.data('snapshot', listData);
+
+    for (var itemID in listData) {
+      var name = listData[itemID].name;
+      var $li = $('<li>');
+
+      $li.data('id', itemID);
+      $li.html(name);
+
+      var $deleteElement = $('<i class="fa fa-trash pull-right delete"></i>');
+      $deleteElement.on('click', deleteItem);
+      $li.append($deleteElement);
+
+      var $editElement = $('<i class="fa fa-pencil-square-o pull-right edit"></i>');
+      $editElement.on('click', populateFormWithItem);
+      $li.append($editElement);
+
+      $listView.append($li);
     }
   }
 
@@ -81,27 +92,14 @@ var hyloAppObject = (function() {
     dbobjItemRef.remove();
   }
 
-  function populateListView($listView, listData) {
-    var dbobjName = $listView.data('dbobj-name');
-    $listView.empty();
-    $listView.data('snapshot', listData);
-
-    for (var itemID in listData) {
-      // console.log(itemID);
-      var name = listData[itemID].name;
-      var $li = $('<li>');
-
-      var $deleteElement = $('<i class="fa fa-trash pull-right delete"></i>');
-      $deleteElement.on('click', deleteItem);
-
-      var $editElement = $('<i class="fa fa-pencil-square-o pull-right edit"></i>');
-      $editElement.on('click', editItem);
-
-      $li.data('id', itemID);
-      $li.html(name);
-      $li.append($deleteElement);
-      $li.append($editElement);
-      $listView.append($li);
+  function populateFormWithItem(e) {
+    var id = $(e.target).parent().data('id');
+    var selectedObj = $(e.target).parent().parent().data('snapshot')[id];
+    var dbobjName = $(e.target).parent().parent().data('dbobj-name');
+    var frm = `form[data-dbobj-name='${dbobjName}']`
+    // Load the data into the form
+    for (var prop in selectedObj) {
+      $(`${frm} .form-control[data-field='${prop}']`).val(selectedObj[prop]);
     }
   }
 
@@ -109,4 +107,10 @@ var hyloAppObject = (function() {
     setupListeners: setupListeners
   };
 
-})();
+})(); // END OF hyloAppObject
+
+// When DOM is fully loaded, execute the app object's single public method
+// to attach all functionality to the DOM via event listeners.
+$(document).ready(function() {
+  hyloAppObject.setupListeners();
+});
