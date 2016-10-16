@@ -63,10 +63,15 @@ var hyloAppObject = (function() {
 
   // PRIVATE METHODS
 
-  function editItem(dbobjName, id) {
-    var dbobjItemRef = dbRef.ref(dbobjName).child(id);
-    console.log(`Edit link for ${dbobjName} ${id} has been clicked on.`);
+  function editItem(dbobjName, selectedObj, id) {
+    var $frm = $('form')
+    // console.log(`Edit link for ${dbobjName} ${id} has been clicked on.`);
+    // console.log(selectedObj);
     // Load the data into the form
+    for (var prop in selectedObj) {
+      // console.log(prop);
+      $(`form .form-control[data-field='${prop}']`).val(selectedObj[prop]);
+    }
   }
 
   function deleteItem(dbobjName, id) {
@@ -77,6 +82,7 @@ var hyloAppObject = (function() {
   function populateListView($listView, listData) {
     var dbobjName = $listView.data('dbobj-name');
     $listView.empty();
+    $listView.data('snapshot', listData);
 
     for (var itemID in listData) {
       // console.log(itemID);
@@ -92,7 +98,8 @@ var hyloAppObject = (function() {
       var $editElement = $('<i class="fa fa-pencil-square-o pull-right edit"></i>');
       $editElement.on('click', function(e) {
         var id = $(e.target).parent().data('id');
-        editItem(dbobjName, id);
+        var selectedObj = $(e.target).parent().parent().data('snapshot')[id]
+        editItem(dbobjName, selectedObj, id);
       });
 
       $li.data('id', itemID);
