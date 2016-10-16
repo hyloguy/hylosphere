@@ -43,16 +43,23 @@ var hyloAppObject = (function() {
       var dbobjRef = dbRef.ref($frm.data('dbobj-name'));
       var tempObj = {};
 
-      // TODO: put UPDATE code in here...
-      // dbobjRef.update({
-      //   someKey: someval
-      // });
-
       $frm.find('.form-control').each(function(index) {
         tempObj[$(this).data('field')] = $(this).val();
         $(this).val('');
       });
-      dbobjRef.push(tempObj);
+
+      if ($frm.data('current-item-id') != '') {
+        console.log("Attempting to update...");
+        // TODO: put UPDATE code in here...
+        // dbobjRef.update({
+        //   someKey: someval
+        // });
+      } else {
+        console.log("Saving Item...");
+        dbobjRef.push(tempObj);
+      }
+
+      $frm.data('current-item-id', '');
       e.preventDefault();
     });
 
@@ -98,6 +105,9 @@ var hyloAppObject = (function() {
     var dbobjName = $(e.target).parent().parent().data('dbobj-name');
     var frm = `form[data-dbobj-name='${dbobjName}']`
     // Load the data into the form
+    $(frm).data('current-item-id', id);
+    $(`${frm} .btn`).html('Update Item');
+    console.log(`loaded item ${$(frm).data('current-item-id')} into form`)
     for (var prop in selectedObj) {
       $(`${frm} .form-control[data-field='${prop}']`).val(selectedObj[prop]);
     }
