@@ -31,7 +31,7 @@ var hyloAppObject = (function() {
     dbRef.ref('activities').on('value', function(results) {
       var $actList = $('.activity-list');
       var allActivities = results.val();
-      console.log(allActivities); // testing
+      // console.log(allActivities); // testing
       populateListView($actList, allActivities);
     });
 
@@ -44,7 +44,12 @@ var hyloAppObject = (function() {
       // and get a reference to it.
       var dbobjRef = dbRef.ref($frm.data('dbobj'));
       var tempObj = {};
-      
+
+      // TODO: put UPDATE code in here...
+      // dbobjRef.update({
+      //   someKey: someval
+      // });
+
       $frm.find('.form-control').each(function(index) {
         tempObj[$(this).data('field')] = $(this).val();
         $(this).val('');
@@ -58,39 +63,39 @@ var hyloAppObject = (function() {
 
   // PRIVATE METHODS
 
-  function editItem(id) {
-    var actRef = dbRef.ref('activities').child(id);
-    console.log(`Edit link for hylo-activity ${id} has been clicked on.`);
-    // actRef.update({
-    //   someKey: someval
-    // });
+  function editItem(dbobj, id) {
+    var dbobjItemRef = dbRef.ref(dbobj).child(id);
+    console.log(`Edit link for ${dbobj} ${id} has been clicked on.`);
+    // Load the data into the form
   }
 
-  function deleteItem(id) {
-    var actRef = dbRef.ref('activities').child(id);
-    actRef.remove();
+  function deleteItem(dbobj, id) {
+    var dbobjItemRef = dbRef.ref(dbobj).child(id);
+    dbobjItemRef.remove();
   }
 
   function populateListView($listView, listData) {
+    var dbobj = $listView.data('dbobj');
     $listView.empty();
 
-    for (var item in listData) {
-      var name = listData[item].name;
+    for (var itemID in listData) {
+      // console.log(itemID);
+      var name = listData[itemID].name;
       var $li = $('<li>');
 
       var $deleteElement = $('<i class="fa fa-trash pull-right delete"></i>');
       $deleteElement.on('click', function(e) {
         var id = $(e.target).parent().data('id');
-        deleteItem(id);
+        deleteItem(dbobj, id);
       });
 
       var $editElement = $('<i class="fa fa-pencil-square-o pull-right edit"></i>');
       $editElement.on('click', function(e) {
         var id = $(e.target).parent().data('id');
-        editItem(id);
+        editItem(dbobj, id);
       });
 
-      $li.attr('data-id', item);
+      $li.data('id', itemID);
       $li.html(name);
       $li.append($deleteElement);
       $li.append($editElement);
