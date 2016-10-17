@@ -73,7 +73,9 @@ var hyloAppObject = (function() {
       showForm(dbobjName);
     });
 
-  }
+    $('.sortable-list').sortable();
+
+  } // End of setupListeners
 
 
   // PRIVATE METHODS
@@ -87,6 +89,7 @@ var hyloAppObject = (function() {
     $frm.find('.form-control').val('');
     $frm.data('current-item-id', '');
     $frm.find('.btn-primary').html('Save Item');
+    $frm.find('.sortable-list').empty();
     $('#item-form').addClass('hidden');
     $frm.addClass('hidden');
   }
@@ -124,7 +127,8 @@ var hyloAppObject = (function() {
 
   function populateFormWithItem(e) {
     var id = $(e.target).parent().data('id');
-    var selectedObj = $(e.target).parent().parent().data('snapshot')[id];
+    var snapshot = $(e.target).parent().parent().data('snapshot');
+    var selectedObj = snapshot[id];
     var dbobjName = $(e.target).parent().parent().data('dbobj-name');
     var frm = `form[data-dbobj-name='${dbobjName}']`
     // Load the data into the form
@@ -133,6 +137,12 @@ var hyloAppObject = (function() {
     // console.log(`loaded item ${$(frm).data('current-item-id')} into form`);
     for (var prop in selectedObj) {
       $(`${frm} .form-control[data-field='${prop}']`).val(selectedObj[prop]);
+    }
+    // TEST SORTABLE LIST
+    var $subsequence = $('.sortable-list');
+    var testArray = Object.keys(snapshot).slice(0,5);
+    for (const el of testArray) {
+      $subsequence.append(`<li>${el}</li>`);
     }
     showForm(dbobjName);
   }
