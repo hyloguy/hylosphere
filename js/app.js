@@ -108,10 +108,10 @@ var hyloAppObject = (function() {
 
     for (var itemID in listData) {
       var name = listData[itemID].name;
-      var $li = $('<a href="#" class="list-group-item">');
+      var $li = $('<div class="checkbox"><label><input type="checkbox" value="">');
 
       $li.data('id', itemID);
-      $li.html(name);
+      $li.append(name);
 
       var $deleteElement = $('<i class="fa fa-trash pull-right delete"></i>');
       $deleteElement.on('click', deleteItem);
@@ -120,7 +120,7 @@ var hyloAppObject = (function() {
       var $editElement = $('<i class="fa fa-pencil-square-o pull-right edit"></i>');
       $editElement.on('click', populateFormWithItem);
       $li.append($editElement);
-      $li.append('</a>');
+      $li.append('</label></div>');
 
       $listView.append($li);
     }
