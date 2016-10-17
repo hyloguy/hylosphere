@@ -50,6 +50,7 @@ var hyloAppObject = (function() {
       // Update existing item or save new one
       var currItemID = $frm.data('current-item-id');
       if (currItemID != '') {
+        console.log($('.sortable-list').sortable('toArray'));
         let dbItemRef = dbobjRef.child(currItemID);
         dbItemRef.update(tempObj);
       } else {
@@ -101,7 +102,7 @@ var hyloAppObject = (function() {
 
     for (var itemID in listData) {
       var name = listData[itemID].name;
-      var $li = $('<li>');
+      var $li = $('<a href="#" class="list-group-item">');
 
       $li.data('id', itemID);
       $li.html(name);
@@ -113,6 +114,7 @@ var hyloAppObject = (function() {
       var $editElement = $('<i class="fa fa-pencil-square-o pull-right edit"></i>');
       $editElement.on('click', populateFormWithItem);
       $li.append($editElement);
+      $li.append('</a>');
 
       $listView.append($li);
     }
@@ -127,8 +129,8 @@ var hyloAppObject = (function() {
 
   function populateFormWithItem(e) {
     var id = $(e.target).parent().data('id');
-    var snapshot = $(e.target).parent().parent().data('snapshot');
-    var selectedObj = snapshot[id];
+    var listData = $(e.target).parent().parent().data('snapshot');
+    var selectedObj = listData[id];
     var dbobjName = $(e.target).parent().parent().data('dbobj-name');
     var frm = `form[data-dbobj-name='${dbobjName}']`
     // Load the data into the form
@@ -140,9 +142,9 @@ var hyloAppObject = (function() {
     }
     // TEST SORTABLE LIST
     var $subsequence = $('.sortable-list');
-    var testArray = Object.keys(snapshot).slice(0,5);
+    var testArray = Object.keys(listData).slice(0,5);
     for (const el of testArray) {
-      $subsequence.append(`<li>${el}</li>`);
+      $subsequence.append(`<li id="${el}" class="list-group-item">${listData[el].name}</li>`);
     }
     showForm(dbobjName);
   }
