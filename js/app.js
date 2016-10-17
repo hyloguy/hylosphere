@@ -17,13 +17,14 @@ firebase.initializeApp(config);
 // Create an asynchronous reference to the Firebase Real-Time Database.
 var dbRef = firebase.database();
 
-// Create application object.
-// All the code is inside an Immediately Implemented Function Expression.
+// ******** CREATE APPLICATION OBJECT: hyloAppObject ********
+// Almost all the code is inside an Immediately Implemented Function Expression.
 var hyloAppObject = (function() {
 
-  // PUBLIC METHOD
+  // ******** PUBLIC METHOD OF hyloAppObject: setupListeners ********
   function setupListeners() {
 
+    // ***** EVENT LISTENER: CHANGE IN FIREBASE AT PATH "ACTIVITIES" ****
     // Whenever the Activities collection in Firebase changes, re-load the full list of
     // activities into the view, and attach click event listeners for each list item.
     // (This event listener is triggered whenever a value in the activities collection is changed.)
@@ -33,7 +34,7 @@ var hyloAppObject = (function() {
       populateListView($actList, allActivities);
     });
 
-
+    // **** EVENT LISTENER: FORM SUBMIT EVENT ****
     // Handle ANY submit-form event:
     $('form').submit(function(e) {
       // Get a pointer to the form that was just submitted.
@@ -62,30 +63,34 @@ var hyloAppObject = (function() {
       e.preventDefault();
     });
 
-
+    // ***** EVENT LISTENER: CLICK EVENT FOR "CANCEL" BUTTON ON FORM *****
     $('.btn-cancel-form').on('click', function(e) {
       var $frm = $(e.target.parentNode);
       clearForm($frm);
     });
 
+    // ***** EVENT LISTENER: CLICK EVENT FOR "CREATE NEW" BUTTON ON LIST VIEW *****
     $('.btn-show-form').on('click', function(e) {
       var $btn = $(e.target);
       var dbobjName = $btn.data('dbobj-name');
       showForm(dbobjName);
     });
 
+    // ***** DOM ELEMENT MODIFIER: USE JQUERY UI TO MAKE A LIST SORTABLE
     $('.sortable-list').sortable();
 
   } // End of setupListeners
 
 
-  // PRIVATE METHODS
+  // ******** PRIVATE METHODS OF hyloAppObject **********
 
+  // ***** METHOD showForm: DISPLAY THE FORM *****
   function showForm(dbobjName) {
     $(`#${dbobjName}-form`).removeClass('hidden');
     $('#item-form').removeClass('hidden');
   }
 
+  // ***** METHOD clearForm: CLEAR THE FORM, RESTORE IT TO "NEW ITEM" STATE, & HIDE IT *****
   function clearForm($frm) {
     $frm.find('.form-control').val('');
     $frm.data('current-item-id', '');
@@ -95,6 +100,7 @@ var hyloAppObject = (function() {
     $frm.addClass('hidden');
   }
 
+  // ***** METHOD populateListView *****
   function populateListView($listView, listData) {
     var dbobjName = $listView.data('dbobj-name');
     $listView.empty();
@@ -120,6 +126,7 @@ var hyloAppObject = (function() {
     }
   }
 
+  // ***** METHOD deleteItem *****
   function deleteItem(e) {
     var id = $(e.target).parent().data('id');
     var dbobjName = $(e.target).parent().parent().data('dbobj-name');
@@ -127,6 +134,7 @@ var hyloAppObject = (function() {
     dbobjItemRef.remove();
   }
 
+  // ***** METHOD populateFormWithItem *****
   function populateFormWithItem(e) {
     var id = $(e.target).parent().data('id');
     var listData = $(e.target).parent().parent().data('snapshot');
@@ -144,7 +152,7 @@ var hyloAppObject = (function() {
     var $subsequence = $('.sortable-list');
     var testArray = Object.keys(listData).slice(0,5);
     for (const el of testArray) {
-      $subsequence.append(`<li id="${el}" class="list-group-item">${listData[el].name}</li>`);
+      $subsequence.append(`<li id="${el}" class="sub-activity">${listData[el].name}</li>`);
     }
     showForm(dbobjName);
   }
@@ -153,8 +161,10 @@ var hyloAppObject = (function() {
     setupListeners: setupListeners
   };
 
-})(); // END OF hyloAppObject
+})();
+// ******** END OF APPLICATION OBJECT: hyloAppObject ********
 
+// ***** JQUERY DOCUMENT READY FUNCTION *****
 // When DOM is fully loaded, execute the app object's single public method
 // to attach all functionality to the DOM via event listeners.
 $(document).ready(function() {
