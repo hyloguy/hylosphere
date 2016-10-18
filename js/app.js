@@ -39,27 +39,33 @@ var hyloAppObject = (function() {
     $('form').submit(function(e) {
       // Get a pointer to the form that was just submitted.
       var $frm = $(e.target);
+
       // Locate the form's associated object in the databse, OR create it if it doesn't exist,
       // and get a reference to it.
-      var dbobjRef = dbRef.ref($frm.data('dbobj-name'));
+      var dbobjName = $frm.data('dbobj-name');
+      var dbobjRef = dbRef.ref(dbobjName);
       var tempObj = {};
 
+      // Store the content of all the form fields in a temporary holding object.
       $frm.find('.form-control').each(function(index) {
         tempObj[$(this).data('field')] = $(this).val();
       });
 
+      if (dbobjName === "activities") {
+        tempObj.subsequence = $('.sortable-list').sortable('toArray');
+      }
+
       // Update existing item or save new one
       var currItemID = $frm.data('current-item-id');
       if (currItemID != '') {
-        console.log($('.sortable-list').sortable('toArray'));
         let dbItemRef = dbobjRef.child(currItemID);
         dbItemRef.update(tempObj);
       } else {
         dbobjRef.push(tempObj);
-        // Clear the form and close it
-        clearForm($frm);
       }
 
+      // Clear the form and close it
+      clearForm($frm);
       e.preventDefault();
     });
 
@@ -108,7 +114,11 @@ var hyloAppObject = (function() {
 
     for (var itemID in listData) {
       var name = listData[itemID].name;
-      var $li = $('<div class="checkbox"><label><input type="checkbox" value="">');
+      var $li = $('<div class="checkbox"><label>');
+
+      var $checkboxElement = $('<input type="checkbox" value="">');
+      $checkboxElement.on('click', checkItem);
+      $li.append($checkboxElement);
 
       $li.data('id', itemID);
       $li.append(name);
@@ -123,6 +133,20 @@ var hyloAppObject = (function() {
       $li.append('</label></div>');
 
       $listView.append($li);
+    }
+  }
+
+  function checkItem(e) {
+    if (!$('#item-form').hasClass('hidden')) {
+      var $cbox = $(e.target);
+      var id = $cbox.parent().data('id');
+      var listData = $(e.target).parent().parent().data('snapshot');
+      if ($cbox.prop('checked')) {
+        console.log(`You checked ${id}`);
+        $('#sub-activities').append(`<li id="${id}" class="sub-activity">${listData[id].name}</li>`);
+      } else {
+        console.log(`You UNchecked ${id}`);
+      }
     }
   }
 
@@ -144,15 +168,17 @@ var hyloAppObject = (function() {
     // Load the data into the form
     $(frm).data('current-item-id', id);
     $(`${frm} .btn-primary`).html('Update Item');
-    // console.log(`loaded item ${$(frm).data('current-item-id')} into form`);
     for (var prop in selectedObj) {
       $(`${frm} .form-control[data-field='${prop}']`).val(selectedObj[prop]);
     }
-    // TEST SORTABLE LIST
-    var $subsequence = $('.sortable-list');
-    var testArray = Object.keys(listData).slice(0,5);
-    for (const el of testArray) {
-      $subsequence.append(`<li id="${el}" class="sub-activity">${listData[el].name}</li>`);
+    // If this is an Activity, load the sortable list
+    if (dbobjName === "activities") {
+      var $subsequence = $('.sortable-list');
+      // var testArray = Object.keys(listData).slice(0,5);
+      var arr = selectedObj.subsequence ? selectedObj.subsequence : [];
+      for (const el of arr) {
+        $subsequence.append(`<li id="${el}" class="sub-activity">${listData[el].name}</li>`);
+      }
     }
     showForm(dbobjName);
   }
