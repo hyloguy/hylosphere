@@ -140,6 +140,10 @@ var hyloAppObject = (function() {
     if (!$('#item-form').hasClass('hidden')) {
       var $cbox = $(e.target);
       var id = $cbox.parent().data('id');
+      // TODO: Find a better alternative to references like the one below,
+      // because doing it this way ties it directly to the current layout/hierarchy
+      // of the form -- which means that if I change the form, this code will break.
+      // Switching to Angular or React is probably the best solution...
       var listData = $(e.target).parent().parent().data('snapshot');
       if ($cbox.prop('checked')) {
         console.log(`You checked ${id}`);
