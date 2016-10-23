@@ -94,6 +94,7 @@ var hyloAppObject = (function() {
   function showForm(dbobjName) {
     $(`#${dbobjName}-form`).removeClass('hidden');
     $('#item-form').removeClass('hidden');
+    $('.list-item').prop('disabled', false);
   }
 
   // ***** METHOD clearForm: CLEAR THE FORM, RESTORE IT TO "NEW ITEM" STATE, & HIDE IT *****
@@ -104,6 +105,7 @@ var hyloAppObject = (function() {
     $frm.find('.sortable-list').empty();
     $('#item-form').addClass('hidden');
     $frm.addClass('hidden');
+    $('.list-item').prop('disabled', true);
   }
 
   // ***** METHOD populateListView *****
@@ -116,7 +118,7 @@ var hyloAppObject = (function() {
       var name = listData[itemID].name;
       var $li = $('<div class="checkbox"><label>');
 
-      var $checkboxElement = $('<input type="checkbox" value="">');
+      var $checkboxElement = $('<input type="checkbox" value="" class="list-item" disabled>');
       $checkboxElement.on('click', checkItem);
       $li.append($checkboxElement);
 
