@@ -14,14 +14,21 @@ var config = {
 };
 firebase.initializeApp(config);
 
-// ******** CREATE APPLICATION OBJECT: hyloAppObject ********
-// Almost all the code is inside an Immediately Implemented Function Expression.
-var hyloAppObject = (function() {
+// ******** BEGIN IIFE ********
+// All the rest of the code is inside an Immediately Implemented Function Expression.
+(function(document, $) {
 
   // Create an asynchronous reference to the Firebase Real-Time Database.
   var dbRef = firebase.database();
 
-  // ******** PUBLIC METHOD OF hyloAppObject: setupListeners ********
+  // ***** JQUERY DOCUMENT READY FUNCTION *****
+  // When DOM is fully loaded, execute the app object's single public method
+  // to attach all functionality to the DOM via event listeners.
+  $(document).ready(function() {
+    setupListeners();
+  });
+
+  // ******** MAIN METHOD: setupListeners ********
   function setupListeners() {
 
     // ***** EVENT LISTENER: CHANGE IN FIREBASE AT PATH "ACTIVITIES" ****
@@ -88,7 +95,7 @@ var hyloAppObject = (function() {
   } // End of setupListeners
 
 
-  // ******** PRIVATE METHODS OF hyloAppObject **********
+  // ******** OTHER METHODS **********
 
   // ***** METHOD showForm: DISPLAY THE FORM *****
   function showForm(dbobjName) {
@@ -197,12 +204,5 @@ var hyloAppObject = (function() {
     setupListeners: setupListeners
   };
 
-})();
-// ******** END OF APPLICATION OBJECT: hyloAppObject ********
-
-// ***** JQUERY DOCUMENT READY FUNCTION *****
-// When DOM is fully loaded, execute the app object's single public method
-// to attach all functionality to the DOM via event listeners.
-$(document).ready(function() {
-  hyloAppObject.setupListeners();
-});
+})(document, window.jQuery);
+// ******** END OF IIFE ********
