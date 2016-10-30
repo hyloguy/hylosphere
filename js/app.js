@@ -14,12 +14,12 @@ var config = {
 };
 firebase.initializeApp(config);
 
-// Create an asynchronous reference to the Firebase Real-Time Database.
-var dbRef = firebase.database();
-
 // ******** CREATE APPLICATION OBJECT: hyloAppObject ********
 // Almost all the code is inside an Immediately Implemented Function Expression.
 var hyloAppObject = (function() {
+
+  // Create an asynchronous reference to the Firebase Real-Time Database.
+  var dbRef = firebase.database();
 
   // ******** PUBLIC METHOD OF hyloAppObject: setupListeners ********
   function setupListeners() {
